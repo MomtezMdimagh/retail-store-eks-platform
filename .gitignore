@@ -1,0 +1,42 @@
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+# NOTE: .terraform.lock.hcl is intentionally NOT ignored — it must be committed.
+# NOTE: env tfvars (dev.tfvars, prod.tfvars) are intentionally NOT ignored — they hold
+#       non-secret values only. Anything sensitive goes in Secrets Manager, never a tfvars.
+
+# Anything explicitly marked secret
+*.tfvars.secret
+
+# Cluster / cloud credentials
+kubeconfig*
+*.kubeconfig
+.kube/
+*.pem
+*.key
+.env
+.env.*
+
+# Private working notes — must never be published (holds the course->file mapping)
+NOTES.md
+
+# Tool caches
+.task/
+.terraform.lock.hcl.bak
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

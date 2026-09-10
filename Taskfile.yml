@@ -1,0 +1,29 @@
+version: '3'
+
+vars:
+  ENV: dev
+  AWS_REGION: us-east-1
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds:
+      - task --list-all
+
+  fmt:
+    desc: Format all Terraform files
+    cmds:
+      - terraform fmt -recursive .
+
+  fmt:check:
+    desc: Check Terraform formatting without writing changes
+    cmds:
+      - terraform fmt -check -recursive -diff .
+
+  lint:
+    desc: Run all pre-commit hooks against the full tree
+    cmds:
+      - pre-commit run --all-files
+
+  # Per-layer apply/destroy tasks (bootstrap:apply, network:apply, cluster:apply, ...)
+  # are added as each infrastructure layer lands, starting with PR 2 (bootstrap).
