@@ -30,3 +30,7 @@ github.com/MomtezMdimagh/retail-store-sample-app
   layer, following the build order in `README.md`.
 - `NOTES.md` (gitignored) holds working notes that must never be published; do not recreate its
   content elsewhere in the tree.
+- Every module, and every folder under `platform/` and `gitops/`, carries its own `README.md`
+  stating purpose, expected contents, and status. For Terraform modules this README also carries
+  `terraform-docs` markers (`<!-- BEGIN_TF_DOCS -->` / `<!-- END_TF_DOCS -->`) — once a module has
+  real `.tf` files, the pre-commit hook fills that section automatically; don't hand-edit inside it.
