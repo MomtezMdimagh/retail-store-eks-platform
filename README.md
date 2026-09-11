@@ -52,11 +52,11 @@ flowchart LR
 
 | Path | Purpose |
 |---|---|
-| `bootstrap/` | Run once, by hand: S3 state backend, GitHub OIDC deploy role, ECR repositories |
-| `infrastructure/modules/` | Reusable Terraform modules (vpc, eks-cluster, eks-addons, karpenter, data-plane, observability) |
+| [`bootstrap/`](bootstrap/) | Run once, by hand: S3 state backend, GitHub OIDC deploy role, ECR repositories |
+| [`infrastructure/modules/`](infrastructure/modules/) | Reusable Terraform modules ([vpc](infrastructure/modules/vpc/), [eks-cluster](infrastructure/modules/eks-cluster/), [eks-addons](infrastructure/modules/eks-addons/), [karpenter](infrastructure/modules/karpenter/), [data-plane](infrastructure/modules/data-plane/), [observability](infrastructure/modules/observability/)) |
 | `infrastructure/live/<env>/` | Thin per-environment, per-layer roots — each is a module call plus backend and tfvars |
-| `platform/` | Cluster-level manifests (Karpenter NodePools, ADOT collectors) — applied by ArgoCD, not `kubectl` |
-| `gitops/` | ArgoCD app-of-apps, per-service Applications, and Helm values per environment |
+| [`platform/`](platform/) | Cluster-level manifests ([Karpenter](platform/karpenter/) NodePools, [ADOT](platform/observability/) collectors, [ArgoCD](platform/argocd/) install) — applied by ArgoCD, not `kubectl` |
+| [`gitops/`](gitops/) | ArgoCD app-of-apps, [per-service Applications](gitops/environments/dev/applications/), and [Helm values](gitops/environments/dev/values/) per environment |
 | `docs/` | Architecture notes, ADRs, runbooks, cost tracking, teardown checklist |
 
 ## Build order
