@@ -17,3 +17,8 @@ output "chart_repository_urls" {
   description = "ECR repository URLs for Helm charts"
   value       = { for service, repo in aws_ecr_repository.charts : service => repo.repository_url }
 }
+
+output "github_actions_role_arn" {
+  description = "IAM role ARN GitHub Actions assumes via OIDC to push images/charts to ECR"
+  value       = module.github_oidc.oidc_role
+}
