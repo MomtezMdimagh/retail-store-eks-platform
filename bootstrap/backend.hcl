@@ -1,4 +1,4 @@
-bucket       = "tfstate-dev-us-east-1-bmyic3"
+bucket       = "tfstate-dev-us-east-1-c40pku"
 key          = "bootstrap/terraform.tfstate"
 region       = "us-east-1"
 encrypt      = true
