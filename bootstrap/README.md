@@ -14,5 +14,4 @@ identity CI uses to deploy, and the registries images and charts get pushed to.
 - `variables.tf`, `outputs.tf`, `versions.tf`
 
 ## Status
-
-Not yet implemented.
+Done .
