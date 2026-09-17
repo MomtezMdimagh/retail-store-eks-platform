@@ -17,8 +17,8 @@ github.com/MomtezMdimagh/retail-store-sample-app
 
 ## Conventions
 
-- Terraform filenames: `versions.tf`, `variables.tf`, `main.tf`, `outputs.tf`. Never numbered
-  prefixes like `c1_` or `c14-02-`.
+- Terraform filenames: `versions.tf`, `variables.tf`, `data+locals.tf` (data sources and locals),
+  `main.tf`, `outputs.tf`. Never numbered prefixes like `c1_` or `c14-02-`.
 - Backend config is always passed via `-backend-config=backend.hcl`; never hardcode a bucket
   name inside `versions.tf`.
 - Use S3 native state locking (`use_lockfile = true`). No DynamoDB lock table.
