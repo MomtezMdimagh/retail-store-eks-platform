@@ -1,15 +1,17 @@
 # Platform: argocd
 
-ArgoCD's own installation and project boundary: how it's installed onto the cluster, and the
-AppProject that scopes what the Applications in `gitops/` are allowed to deploy.
+The AppProject that scopes what the Applications in `gitops/` are allowed to deploy. ArgoCD's own
+installation is Terraform-managed (`infrastructure/modules/argocd`), not documented here as manual
+steps - this folder only holds the one manifest that has to live inside `platform/` so the
+`gitops/environments/dev/applications/platform.yaml` Application (which recursively syncs
+everything under `platform/`) picks it up along with Karpenter's and observability's manifests.
 
 ## Expected contents
 
-- `install.md` — installation steps
 - `appproject-retail-store.yaml`
 
 **Built in:** PR 8 — `feat/argocd`
 
 ## Status
 
-Not yet implemented.
+Implemented.

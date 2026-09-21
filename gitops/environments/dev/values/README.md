@@ -12,4 +12,4 @@ truth for what's actually running.
 
 ## Status
 
-Not yet implemented.
+Implemented with placeholder image tags - PR 9's CI starts writing real ones.

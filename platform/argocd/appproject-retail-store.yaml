@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: retail-store
+  namespace: argocd
+spec:
+  description: Retail store application and platform manifests
+
+  sourceRepos:
+    - https://github.com/MomtezMdimagh/retail-store-sample-app.git
+    - https://github.com/MomtezMdimagh/retail-store-eks-platform.git
+
+  destinations:
+    - namespace: default
+      server: https://kubernetes.default.svc
+    - namespace: kube-system
+      server: https://kubernetes.default.svc
+
+  clusterResourceWhitelist:
+    - group: karpenter.sh
+      kind: NodePool
+    - group: karpenter.k8s.aws
+      kind: EC2NodeClass
+
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
