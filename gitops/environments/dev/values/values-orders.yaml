@@ -12,3 +12,26 @@ resources:
 
 serviceAccount:
   name: orders
+
+# CPU-only target, deliberately - orders is JVM-based (see values-ui.yaml's comment).
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: "50%"
+
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: ScheduleAnyway
+    matchLabelKeys:
+      - pod-template-hash
+
+# orders is more sensitive to interruption than ui/catalog/cart - keep it on stable, on-demand
+# capacity rather than letting Karpenter place it on spot.
+nodeSelector:
+  karpenter.sh/capacity-type: on-demand

@@ -12,3 +12,25 @@ resources:
 
 serviceAccount:
   name: checkout
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: "50%"
+
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: ScheduleAnyway
+    matchLabelKeys:
+      - pod-template-hash
+
+# checkout is more sensitive to interruption than ui/catalog/cart - keep it on stable, on-demand
+# capacity rather than letting Karpenter place it on spot.
+nodeSelector:
+  karpenter.sh/capacity-type: on-demand
