@@ -14,4 +14,5 @@ significantly cheaper capacity while critical ones stay on-demand.
 
 ## Status
 
-Not yet implemented.
+Manifests committed. Not yet applied - ArgoCD (PR 8) is what will actually apply these to the
+cluster; per this repo's own convention, `platform/` is never `kubectl apply`-ed directly.
