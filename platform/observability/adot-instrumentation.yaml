@@ -1,0 +1,23 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: default-instrumentation
+  namespace: observability
+spec:
+  # Deliberately no per-language injection blocks (java:, nodejs:, python:) - this only supplies
+  # SDK configuration for services that instrument themselves, it does not auto-inject agents.
+  env:
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: http/protobuf
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: http://adot-traces-collector.observability.svc:4318
+    - name: OTEL_TRACES_EXPORTER
+      value: otlp
+    - name: OTEL_METRICS_EXPORTER
+      value: "none"
+    - name: OTEL_LOGS_EXPORTER
+      value: "none"
+    - name: OTEL_TRACES_SAMPLER
+      value: parentbased_traceidratio
+    - name: OTEL_TRACES_SAMPLER_ARG
+      value: "0.1" # 10% sampling, not 100% - a real, ongoing X-Ray cost lever

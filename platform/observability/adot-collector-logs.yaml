@@ -1,0 +1,42 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: adot-logs
+  namespace: observability
+spec:
+  mode: daemonset
+  serviceAccount: adot-logs-collector
+  config:
+    receivers:
+      filelog:
+        include:
+          - /var/log/pods/*/*/*.log
+        start_at: end
+    processors:
+      batch: {}
+    exporters:
+      awscloudwatchlogs:
+        region: us-east-1
+        # Must match `terraform output log_group_name` from infrastructure/live/dev/70-observability -
+        # a pre-created, retention-bound log group, not one the exporter auto-creates unbounded.
+        log_group_name: "/retail-store/retail-store-eks-dev/observability"
+        log_stream_name: "${env:K8S_NODE_NAME}"
+    service:
+      pipelines:
+        logs:
+          receivers: [filelog]
+          processors: [batch]
+          exporters: [awscloudwatchlogs]
+  env:
+    - name: K8S_NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
+  volumeMounts:
+    - name: varlogpods
+      mountPath: /var/log/pods
+      readOnly: true
+  volumes:
+    - name: varlogpods
+      hostPath:
+        path: /var/log/pods

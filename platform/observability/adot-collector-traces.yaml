@@ -1,0 +1,33 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: adot-traces
+  namespace: observability
+spec:
+  mode: deployment
+  serviceAccount: adot-traces-collector
+  config:
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+    processors:
+      memory_limiter:
+        check_interval: 5s
+        limit_percentage: 80
+        spike_limit_percentage: 25
+      batch: {}
+    exporters:
+      awsxray:
+        region: us-east-1
+      # No debug exporter here on purpose - fine for one-off troubleshooting, not for a
+      # continuously-running pipeline (roughly doubles CPU and log volume for no ongoing benefit).
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [memory_limiter, batch]
+          exporters: [awsxray]
