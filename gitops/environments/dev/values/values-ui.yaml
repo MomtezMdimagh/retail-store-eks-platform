@@ -1,6 +1,20 @@
 # Image tag is updated automatically by the app repo's CI (PR 9) on every successful build.
+# repository points at our own ECR, not the chart's public.ecr.aws default - the CI-built image
+# only ever lands in ours.
 image:
+  repository: 652197205931.dkr.ecr.us-east-1.amazonaws.com/retail-store/ui
   tag: "0.1.0"
+
+fullnameOverride: ui
+
+# In-cluster service DNS names for the other 4 services. All plain k8s Service names, not AWS
+# resources - each matches its own fullnameOverride in its own values file.
+app:
+  endpoints:
+    catalog: http://catalog:80
+    carts: http://cart:80
+    orders: http://orders:80
+    checkout: http://checkout:80
 
 resources:
   requests:

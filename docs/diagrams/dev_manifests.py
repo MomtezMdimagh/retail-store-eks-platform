@@ -13,12 +13,15 @@ GRAPH_ATTR = {"fontsize": "18", "fontname": "Helvetica-Bold", "bgcolor": "white"
 NODE_ATTR = {"fontsize": "12", "fontname": "Helvetica"}
 EDGE_ATTR = {"fontsize": "10", "fontname": "Helvetica", "color": "gray35"}
 
-with Diagram("gitops/environments/dev/manifests (planned)",
+with Diagram("gitops/environments/dev/manifests",
              filename=os.path.join(_here, "generated", "dev-manifests"), show=False, direction="LR",
              graph_attr=GRAPH_ATTR, node_attr=NODE_ATTR, edge_attr=EDGE_ATTR):
-    secret = SecretsManager("Secrets Manager")
+    secret = SecretsManager("RDS master-user\nsecret")
     spc = Blank("SecretProviderClass")
-    k8s_secret = Blank("K8s Secret")
-    pod = Deployment("service pod")
+    helper = Deployment("secret-sync-helper\n(mounts the CSI volume\nso syncing happens at all)")
+    k8s_secret = Blank("k8s Secret\n(catalog-db / orders-db)")
+    pod = Deployment("catalog / orders pod\n(envFrom)")
 
-    secret >> spc >> k8s_secret >> pod
+    secret >> spc
+    spc >> Edge(label="mounted by") >> helper
+    spc >> Edge(label="secretObjects sync") >> k8s_secret >> pod

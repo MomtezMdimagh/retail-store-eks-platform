@@ -1,6 +1,26 @@
 # Image tag is updated automatically by the app repo's CI (PR 9) on every successful build.
+# repository points at our own ECR, not the chart's public.ecr.aws default - the CI-built image
+# only ever lands in ours.
 image:
+  repository: 652197205931.dkr.ecr.us-east-1.amazonaws.com/retail-store/catalog
   tag: "0.1.0"
+
+# Pins the release-name/chart-name mismatch some of these charts have (cart's is the real one -
+# see values-cart.yaml) so every service's k8s Service name is exactly its own name.
+fullnameOverride: catalog
+
+# Points the chart at the real RDS instance instead of its in-memory default. endpoint/secret ARN
+# only exist once infrastructure/live/dev/50-data-plane is applied - fill in from
+# `terraform output catalog_endpoint` and the SecretProviderClass in
+# gitops/environments/dev/manifests/secretproviderclass-catalog.yaml, per docs/runbooks/deploy.md.
+app:
+  persistence:
+    provider: mysql
+    endpoint: "<FILL IN AFTER 50-data-plane APPLIES: terraform output catalog_endpoint>"
+    database: "catalog"
+    secret:
+      create: false
+      name: catalog-db
 
 resources:
   requests:

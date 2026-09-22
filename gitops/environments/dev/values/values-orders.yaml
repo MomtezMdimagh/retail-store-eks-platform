@@ -1,6 +1,29 @@
 # Image tag is updated automatically by the app repo's CI (PR 9) on every successful build.
+# repository points at our own ECR, not the chart's public.ecr.aws default - the CI-built image
+# only ever lands in ours.
 image:
+  repository: 652197205931.dkr.ecr.us-east-1.amazonaws.com/retail-store/orders
   tag: "0.1.0"
+
+fullnameOverride: orders
+
+# Points the chart at the real RDS instance instead of its in-memory default. endpoint/secret ARN
+# only exist once infrastructure/live/dev/50-data-plane is applied - fill in from
+# `terraform output orders_endpoint` and the SecretProviderClass in
+# gitops/environments/dev/manifests/secretproviderclass-orders.yaml, per docs/runbooks/deploy.md.
+# Messaging deliberately stays "in-memory" this round - the vendored chart has no template
+# support for an "sqs" provider yet, even though the real SQS queue exists
+# (infrastructure/modules/data-plane/orders-postgres) and the app's Java code does support it.
+# A documented follow-up, not a blocker: orders still persists real rows to real Postgres either
+# way.
+app:
+  persistence:
+    provider: postgres
+    endpoint: "<FILL IN AFTER 50-data-plane APPLIES: terraform output orders_endpoint>"
+    database: "orders"
+    secret:
+      create: false
+      name: orders-db
 
 resources:
   requests:
