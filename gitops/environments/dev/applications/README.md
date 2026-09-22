@@ -9,9 +9,11 @@ drift between the cluster and this directory corrects itself.
 ## Expected contents
 
 - `platform.yaml`
+- `manifests.yaml` — syncs `gitops/environments/dev/manifests/`
 - `catalog.yaml`, `cart.yaml`, `checkout.yaml`, `orders.yaml`, `ui.yaml`
 
-**Built in:** PR 8 — `feat/argocd`
+**Built in:** PR 8 — `feat/argocd`. `manifests.yaml` added while closing the gaps found writing
+`docs/runbooks/deploy.md` - nothing synced `manifests/` at all until then.
 
 ## Status
 

@@ -24,5 +24,6 @@ with Diagram("gitops/environments/dev/applications", filename=os.path.join(_here
         checkout = Deployment("checkout")
         orders = Deployment("orders")
         platform_app = Blank("platform.yaml\n(multi-source)")
+        manifests_app = Blank("manifests.yaml\n(SecretProviderClasses)")
 
-    argocd >> Edge(label="sync") >> [ui, catalog, cart, checkout, orders, platform_app]
+    argocd >> Edge(label="sync") >> [ui, catalog, cart, checkout, orders, platform_app, manifests_app]
