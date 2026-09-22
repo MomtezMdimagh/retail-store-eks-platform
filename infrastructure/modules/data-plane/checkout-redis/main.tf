@@ -25,11 +25,6 @@ resource "aws_security_group" "checkout" {
   tags = merge(var.tags, { Environment = var.environment_name })
 }
 
-resource "random_password" "auth" {
-  length  = 32
-  special = false
-}
-
 resource "aws_elasticache_replication_group" "checkout" {
   replication_group_id       = "${var.cluster_name}-checkout-redis"
   description                = "Redis cache for the checkout service"
@@ -41,22 +36,24 @@ resource "aws_elasticache_replication_group" "checkout" {
   subnet_group_name          = aws_elasticache_subnet_group.checkout.name
   security_group_ids         = [aws_security_group.checkout.id]
   at_rest_encryption_enabled = true
-  transit_encryption_enabled = true
-  auth_token                 = random_password.auth.result
+  # No transit encryption/AUTH - the vendored retail-store-sample-app checkout chart only ever
+  # builds a plain redis://host:port connection string, with no way to pass a password or use
+  # TLS. AUTH requires transit encryption, so both are off together; a real production fork of
+  # that chart would add support for both instead of dropping them here.
+  transit_encryption_enabled = false
   tags                       = merge(var.tags, { Environment = var.environment_name })
 }
 
 resource "aws_secretsmanager_secret" "checkout" {
-  name = "${var.cluster_name}-checkout-redis-auth"
+  name = "${var.cluster_name}-checkout-redis-endpoint"
   tags = merge(var.tags, { Environment = var.environment_name })
 }
 
 resource "aws_secretsmanager_secret_version" "checkout" {
   secret_id = aws_secretsmanager_secret.checkout.id
   secret_string = jsonencode({
-    auth_token = random_password.auth.result
-    endpoint   = aws_elasticache_replication_group.checkout.primary_endpoint_address
-    port       = 6379
+    endpoint = aws_elasticache_replication_group.checkout.primary_endpoint_address
+    port     = 6379
   })
 }
 
