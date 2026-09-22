@@ -1,6 +1,9 @@
 # Image tag is promoted manually - a reviewed PR copies a proven dev tag here. No CI writes to this file.
 image:
+  repository: 652197205931.dkr.ecr.us-east-1.amazonaws.com/retail-store/cart
   tag: "0.1.0"
+
+fullnameOverride: cart
 
 resources:
   requests:

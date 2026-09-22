@@ -1,6 +1,26 @@
 # Image tag is updated automatically by the app repo's CI (PR 9) on every successful build.
+# repository points at our own ECR, not the chart's public.ecr.aws default - the CI-built image
+# only ever lands in ours.
 image:
+  repository: 652197205931.dkr.ecr.us-east-1.amazonaws.com/retail-store/checkout
   tag: "0.1.0"
+
+fullnameOverride: checkout
+
+# Points the chart at the real ElastiCache Redis instead of its in-memory default. No secret
+# needed - infrastructure/modules/data-plane/checkout-redis drops transit encryption/AUTH
+# entirely, since the vendored chart only ever builds a plain redis://host:port connection string
+# with no way to pass a password or use TLS. endpoint only exists once
+# infrastructure/live/dev/50-data-plane is applied - fill in from
+# `terraform output checkout_endpoint` (append ":6379" - ElastiCache's endpoint attribute has no
+# port suffix, unlike RDS's), per docs/runbooks/deploy.md.
+app:
+  persistence:
+    provider: redis
+    redis:
+      endpoint: "<FILL IN AFTER 50-data-plane APPLIES: terraform output checkout_endpoint>:6379"
+  endpoints:
+    orders: "http://orders:80"
 
 resources:
   requests:

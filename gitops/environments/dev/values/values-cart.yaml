@@ -1,6 +1,25 @@
 # Image tag is updated automatically by the app repo's CI (PR 9) on every successful build.
+# repository points at our own ECR, not the chart's public.ecr.aws default - the CI-built image
+# only ever lands in ours.
 image:
+  repository: 652197205931.dkr.ecr.us-east-1.amazonaws.com/retail-store/cart
   tag: "0.1.0"
+
+# The chart's own internal name is "carts" (see its _helpers.tpl), independent of our "cart"
+# Application/release name - without this override the real k8s Service name would be
+# "cart-carts", not "cart". Every other service's chart name already matches its release name.
+fullnameOverride: cart
+
+# Points the chart at the real DynamoDB table. No secret needed - DynamoDB access is IAM-only via
+# the cart Pod Identity role, nothing to deliver via Secrets Manager. tableName only exists once
+# infrastructure/live/dev/50-data-plane is applied - fill in from
+# `terraform output cart_table_name`, per docs/runbooks/deploy.md.
+app:
+  persistence:
+    provider: dynamodb
+    dynamodb:
+      tableName: "<FILL IN AFTER 50-data-plane APPLIES: terraform output cart_table_name>"
+      createTable: false
 
 resources:
   requests:
