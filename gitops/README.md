@@ -13,6 +13,9 @@ forget.
 - `environments/<env>/values/` — Helm values per service; CI updates the image tag here on every build
 - `environments/<env>/manifests/` — anything that isn't a Helm chart or an Application (e.g. a
   SecretProviderClass, since ARNs differ per environment)
+- `environments/<env>/platform/` — the handful of `platform/` manifests that hardcode an
+  environment-specific value (cluster name, AMP endpoint) and so can't live in the shared
+  `platform/` directory; `platform.yaml` in this same environment syncs both
 
 ## Status
 

@@ -1,0 +1,33 @@
+# Image tag is promoted manually - a reviewed PR copies a proven dev tag here. No CI writes to this file.
+image:
+  tag: "0.1.0"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 300m
+    memory: 256Mi
+
+serviceAccount:
+  name: catalog
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: "50%"
+
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: ScheduleAnyway
+    matchLabelKeys:
+      - pod-template-hash
+
+# No capacity-type nodeSelector - catalog can tolerate spot interruption.

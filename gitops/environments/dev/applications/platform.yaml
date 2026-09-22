@@ -5,12 +5,20 @@ metadata:
   namespace: argocd
 spec:
   project: default # the retail-store AppProject this syncs in isn't guaranteed to exist yet
-  source:
-    repoURL: https://github.com/MomtezMdimagh/retail-store-eks-platform.git
-    targetRevision: main
-    path: platform
-    directory:
-      recurse: true
+  sources:
+    - repoURL: https://github.com/MomtezMdimagh/retail-store-eks-platform.git
+      targetRevision: main
+      path: platform
+      directory:
+        recurse: true
+    - repoURL: https://github.com/MomtezMdimagh/retail-store-eks-platform.git
+      targetRevision: main
+      # Environment-coupled manifests (Karpenter's EC2NodeClass, the AMP endpoint in the metrics
+      # collector) that can't live in the shared platform/ directory above - see the ADR on why
+      # these two files are split per environment.
+      path: gitops/environments/dev/platform
+      directory:
+        recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system

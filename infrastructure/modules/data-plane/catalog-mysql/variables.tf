@@ -35,6 +35,18 @@ variable "instance_class" {
   default     = "db.t4g.micro"
 }
 
+variable "deletion_protection" {
+  description = "Whether to enable RDS deletion protection - true once this stops being a dev-only environment"
+  type        = bool
+  default     = false
+}
+
+variable "backup_retention_period" {
+  description = "Number of days to retain automated backups"
+  type        = number
+  default     = 7
+}
+
 variable "tags" {
   description = "Tags applied to every resource this module creates"
   type        = map(string)

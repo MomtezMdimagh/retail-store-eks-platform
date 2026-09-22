@@ -39,8 +39,8 @@ resource "aws_db_instance" "orders" {
   publicly_accessible         = false
   skip_final_snapshot         = false
   final_snapshot_identifier   = "${var.cluster_name}-orders-postgres-final"
-  deletion_protection         = false
-  backup_retention_period     = 7
+  deletion_protection         = var.deletion_protection
+  backup_retention_period     = var.backup_retention_period
   tags                        = merge(var.tags, { Environment = var.environment_name })
 }
 
