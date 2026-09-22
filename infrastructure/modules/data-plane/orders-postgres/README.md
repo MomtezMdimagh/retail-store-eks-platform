@@ -1,7 +1,9 @@
 # Module: data-plane/orders-postgres
 
-RDS Postgres for the orders service, an SQS queue for order-processing events, and the IAM role +
-Pod Identity association that let the orders pod reach both without static credentials.
+![orders-postgres module diagram](../../../../docs/diagrams/generated/orders-postgres-module.png)
+
+RDS Postgres for the orders service, an SQS queue for order-processing events, and the Pod
+Identity role that lets the orders pod reach both without static credentials.
 
 **Built in:** PR 7 — `feat/data-plane`
 

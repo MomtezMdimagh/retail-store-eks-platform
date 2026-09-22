@@ -1,5 +1,7 @@
 # GitOps: dev platform
 
+![dev platform diagram](../../../../docs/diagrams/generated/dev-platform.png)
+
 The `platform/` manifests that are genuinely coupled to this environment — a cluster name, VPC
 tags, a Karpenter node role name, or an AMP remote-write endpoint — and so can't live in the
 shared `platform/` directory at the repo root. Synced by this environment's `platform.yaml`

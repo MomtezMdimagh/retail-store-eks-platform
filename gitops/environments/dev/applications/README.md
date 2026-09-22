@@ -1,7 +1,9 @@
 # GitOps: dev applications
 
-One ArgoCD Application per service, plus `platform.yaml` which syncs everything under
-`platform/karpenter` and `platform/observability`. Auto-sync with prune and self-heal enabled —
+![dev applications diagram](../../../../docs/diagrams/generated/dev-applications.png)
+
+One ArgoCD Application per service, plus `platform.yaml` (multi-source: the shared `platform/`
+directory and this environment's own `platform/`). Auto-sync with prune and self-heal enabled —
 drift between the cluster and this directory corrects itself.
 
 ## Expected contents

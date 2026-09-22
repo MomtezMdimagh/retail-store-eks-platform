@@ -1,9 +1,10 @@
 # Module: karpenter
 
-Karpenter's control-plane side: controller IAM role and Pod Identity association, the Helm release,
-and the SQS queue + EventBridge rules that feed it spot-interruption notices. Node-shape policy
-itself (EC2NodeClass, NodePools) lives in `platform/karpenter/`, since ArgoCD manages that, not
-Terraform.
+![karpenter module diagram](../../../docs/diagrams/generated/karpenter-module.png)
+
+Karpenter's control-plane side: controller IAM role and Pod Identity association, the Helm
+release, and the SQS queue + EventBridge rules that feed it spot-interruption notices. Node-shape
+policy (EC2NodeClass, NodePools) lives in `platform/karpenter/` instead, since ArgoCD manages that.
 
 **Built in:** PR 6 — `feat/karpenter`
 

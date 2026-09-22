@@ -1,9 +1,10 @@
 # Module: data-plane
 
-The application's AWS-managed backing services, one sub-module per service. Nothing here is
+![data-plane overview diagram](../../../docs/diagrams/generated/data-plane-overview.png)
+
+The application's AWS-managed backing services, one sub-module per service. Nothing is
 self-hosted in the cluster — every database, cache, and queue is a real managed AWS resource, with
-credentials delivered to pods via Secrets Manager and EKS Pod Identity rather than baked into
-values files.
+credentials delivered via Secrets Manager and EKS Pod Identity, never baked into values files.
 
 - `catalog-mysql/` — RDS MySQL
 - `cart-dynamodb/` — DynamoDB table

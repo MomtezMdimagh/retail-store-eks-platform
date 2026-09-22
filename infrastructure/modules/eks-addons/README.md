@@ -1,13 +1,10 @@
-
 # Module: eks-addons
 
-Installs the add-ons that make the EKS cluster usable for real workloads: the Pod Identity agent
-(the mechanism every other component here depends on), the AWS Load Balancer Controller (provisions
-ALBs/NLBs from Kubernetes Ingress/Service objects, using the subnet discovery tags from the vpc
-module), the EBS CSI driver (persistent volumes), the Secrets Store CSI driver with its AWS provider
-(mounting Secrets Manager values into pods), ExternalDNS (automatic Route53 record management), and
-metrics-server (the metrics API the Horizontal Pod Autoscaler later depends on). Every component
-that needs AWS permissions uses EKS Pod Identity exclusively - no IRSA, no OIDC provider.
+![eks-addons module diagram](../../../docs/diagrams/generated/eks-addons-module.png)
+
+Installs the add-ons that make the cluster usable: Pod Identity agent, AWS Load Balancer
+Controller, EBS CSI driver, Secrets Store CSI driver, ExternalDNS, and metrics-server. Every
+component that needs AWS permissions uses EKS Pod Identity exclusively - no IRSA, no OIDC provider.
 
 **Built in:** PR 5 — `feat/eks_add_ons`
 

@@ -1,19 +1,12 @@
 # GitOps: dev values
 
+![dev values diagram](../../../../docs/diagrams/generated/dev-values.png)
+
 Helm values for each service, dev environment. Each service's CI pipeline updates its `image.tag`
-field here on every successful build — this file, not the chart's own default, is the source of
-truth for what's actually running.
-
-Autoscaling (PR 11): every service enables `autoscaling` (CPU-only targets - `ui`, `cart`, and
-`orders` are JVM-based, and a memory target on a JVM service is a real trap, since heap doesn't
-shrink back down after a load spike) and a percentage-based `podDisruptionBudget` so it tracks
-`minReplicas`/`maxReplicas` automatically rather than needing a manual update if either changes.
-`checkout` and `orders` pin to on-demand capacity via `nodeSelector`; `ui`, `catalog`, and `cart`
-carry no capacity-type constraint, so Karpenter (PR 6) is free to place them on spot.
-
-To actually demonstrate scale-out, the app repo already ships a purpose-built Artillery-based load
-generator (`src/load-generator` - "useful for scenarios such as autoscaling, observability and
-resiliency testing") rather than needing a custom script here.
+field here on every successful build — this file is the source of truth for what's running, not
+the chart's own default. Autoscaling (CPU-only targets, since `ui`/`cart`/`orders` are JVM-based)
+and a percentage-based `podDisruptionBudget` are set here too; `checkout`/`orders` pin to
+on-demand capacity, the rest are free for Karpenter to place on spot.
 
 ## Expected contents
 

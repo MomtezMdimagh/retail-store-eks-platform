@@ -1,7 +1,10 @@
 # Module: data-plane/checkout-redis
 
-ElastiCache Redis cluster backing the checkout service's session/cart cache, with its own security
-group and subnet group.
+![checkout-redis module diagram](../../../../docs/diagrams/generated/checkout-redis-module.png)
+
+ElastiCache Redis (replication group, for auth-token + encryption support) backing checkout's
+session/cart cache, with its own security group, an auth token in Secrets Manager, and the Pod
+Identity role that lets the checkout pod read it.
 
 **Built in:** PR 7 — `feat/data-plane`
 

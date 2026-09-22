@@ -1,5 +1,7 @@
 # GitOps: prod values
 
+![prod values diagram](../../../../docs/diagrams/generated/prod-values.png)
+
 Helm values for each service, prod environment. **Unlike dev, no CI writes to these files.**
 Promotion to prod is a deliberate manual action: open a PR that copies a specific,
 already-proven dev image tag (from `../../dev/values/values-<service>.yaml`) into the matching
