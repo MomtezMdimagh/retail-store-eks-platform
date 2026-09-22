@@ -1,0 +1,11 @@
+# Image tag is updated automatically by the app repo's CI (PR 9) on every successful build.
+image:
+  tag: "0.1.0"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
