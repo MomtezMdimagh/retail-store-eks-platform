@@ -9,6 +9,12 @@ variable "environment_name" {
   type        = string
 }
 
+variable "upstream_state_key_prefix" {
+  description = "Prefix for this environment's own upstream layer state keys in the shared state bucket - empty for dev, \"prod/\" for prod, since only prod's keys carry an environment prefix (a naming artifact from when the bucket was first created dev-only)"
+  type        = string
+  default     = ""
+}
+
 variable "cluster_name" {
   description = "EKS cluster name these add-ons install into"
   type        = string

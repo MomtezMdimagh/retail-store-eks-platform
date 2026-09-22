@@ -9,6 +9,12 @@ variable "environment_name" {
   type        = string
 }
 
+variable "upstream_state_key_prefix" {
+  description = "Prefix for this environment's own upstream layer state keys in the shared state bucket - empty for dev, \"prod/\" for prod, since only prod's keys carry an environment prefix (a naming artifact from when the bucket was first created dev-only)"
+  type        = string
+  default     = ""
+}
+
 variable "cluster_name" {
   description = "EKS cluster name workload pods run in"
   type        = string
@@ -27,6 +33,18 @@ variable "postgres_engine_version" {
 variable "redis_engine_version" {
   description = "ElastiCache Redis engine version - check AWS's currently supported versions before setting"
   type        = string
+}
+
+variable "deletion_protection" {
+  description = "Whether to enable RDS deletion protection on catalog-mysql and orders-postgres - true once this stops being a dev-only environment"
+  type        = bool
+  default     = false
+}
+
+variable "backup_retention_period" {
+  description = "Number of days to retain automated RDS backups for catalog-mysql and orders-postgres"
+  type        = number
+  default     = 7
 }
 
 variable "tags" {

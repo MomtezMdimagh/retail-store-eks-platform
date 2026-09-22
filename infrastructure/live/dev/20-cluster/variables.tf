@@ -9,6 +9,12 @@ variable "environment_name" {
   type        = string
 }
 
+variable "upstream_state_key_prefix" {
+  description = "Prefix for this environment's own upstream layer state keys in the shared state bucket - empty for dev, \"prod/\" for prod, since only prod's keys carry an environment prefix (a naming artifact from when the bucket was first created dev-only)"
+  type        = string
+  default     = ""
+}
+
 variable "cluster_name" {
   description = "EKS cluster name - must match the value used in the network layer's subnet tags"
   type        = string
@@ -17,6 +23,12 @@ variable "cluster_name" {
 variable "cluster_version" {
   description = "Kubernetes version for the control plane"
   type        = string
+}
+
+variable "cluster_endpoint_public_access_cidrs" {
+  description = "CIDRs allowed to reach the public EKS endpoint - wide open by default for dev convenience, tighten per environment"
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
 }
 
 variable "tags" {

@@ -3,7 +3,7 @@ data "terraform_remote_state" "network" {
 
   config = {
     bucket = "tfstate-dev-us-east-1-c40pku"
-    key    = "network/terraform.tfstate"
+    key    = "${var.upstream_state_key_prefix}network/terraform.tfstate"
     region = "us-east-1"
   }
 }
@@ -13,7 +13,7 @@ data "terraform_remote_state" "cluster" {
 
   config = {
     bucket = "tfstate-dev-us-east-1-c40pku"
-    key    = "cluster/terraform.tfstate"
+    key    = "${var.upstream_state_key_prefix}cluster/terraform.tfstate"
     region = "us-east-1"
   }
 }

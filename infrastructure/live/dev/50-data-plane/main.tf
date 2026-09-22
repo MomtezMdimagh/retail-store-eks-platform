@@ -7,6 +7,8 @@ module "catalog_mysql" {
   private_subnet_ids        = data.terraform_remote_state.network.outputs.private_subnet_ids
   cluster_security_group_id = data.terraform_remote_state.cluster.outputs.cluster_security_group_id
   engine_version            = var.mysql_engine_version
+  deletion_protection       = var.deletion_protection
+  backup_retention_period   = var.backup_retention_period
   tags                      = var.tags
 }
 
@@ -19,6 +21,8 @@ module "orders_postgres" {
   private_subnet_ids        = data.terraform_remote_state.network.outputs.private_subnet_ids
   cluster_security_group_id = data.terraform_remote_state.cluster.outputs.cluster_security_group_id
   engine_version            = var.postgres_engine_version
+  deletion_protection       = var.deletion_protection
+  backup_retention_period   = var.backup_retention_period
   tags                      = var.tags
 }
 

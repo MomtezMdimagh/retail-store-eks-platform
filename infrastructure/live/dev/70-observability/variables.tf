@@ -34,6 +34,12 @@ variable "node_exporter_addon_version" {
   type        = string
 }
 
+variable "log_retention_days" {
+  description = "Retention for the application traces/logs CloudWatch log group"
+  type        = number
+  default     = 14
+}
+
 variable "tags" {
   description = "Tags applied to every resource this layer creates"
   type        = map(string)
