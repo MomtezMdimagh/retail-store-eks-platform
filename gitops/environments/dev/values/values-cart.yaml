@@ -12,3 +12,24 @@ resources:
 
 serviceAccount:
   name: cart
+
+# CPU-only target, deliberately - cart is JVM-based (see values-ui.yaml's comment on why memory
+# targets don't pair well with JVM services).
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: "50%"
+
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: ScheduleAnyway
+    matchLabelKeys:
+      - pod-template-hash
+
+# No capacity-type nodeSelector - cart can tolerate spot interruption.
