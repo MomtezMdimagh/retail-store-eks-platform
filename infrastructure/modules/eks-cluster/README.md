@@ -1,11 +1,10 @@
 # Module: eks-cluster
 
-The EKS control plane and a small baseline managed node group. The control plane's Kubernetes
-secrets are encrypted with a dedicated KMS key, control-plane logs go to an explicitly-retained
-CloudWatch log group, and cluster access is managed entirely through EKS access entries (API
-authentication mode) rather than the legacy aws-auth ConfigMap. The baseline node group is a
-small, static pool sized to run core add-ons before Karpenter (PR 6) takes over workload
-autoscaling.
+![eks-cluster module diagram](../../../docs/diagrams/generated/eks-cluster-module.png)
+
+The EKS control plane and a small baseline managed node group. Secrets are encrypted with a
+dedicated KMS key, cluster access goes through EKS access entries (not the legacy aws-auth
+ConfigMap), and the baseline node group just runs core add-ons until Karpenter (PR 6) takes over.
 
 **Built in:** PR 4 — `feat/eks-cluster`
 

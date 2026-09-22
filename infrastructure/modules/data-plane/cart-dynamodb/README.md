@@ -1,5 +1,7 @@
 # Module: data-plane/cart-dynamodb
 
+![cart-dynamodb module diagram](../../../../docs/diagrams/generated/cart-dynamodb-module.png)
+
 DynamoDB table backing the cart service, plus the IAM policy, role, and Pod Identity association
 that grant the cart pod scoped read/write access to it.
 

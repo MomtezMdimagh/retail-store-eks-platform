@@ -1,5 +1,7 @@
 # Bootstrap
 
+![Bootstrap diagram](../docs/diagrams/generated/bootstrap.png)
+
 Run-once, by hand, ahead of everything else: the small set of AWS resources every other layer
 depends on but none of them can create for themselves — where Terraform stores its own state, the
 identity CI uses to deploy, and the registries images and charts get pushed to.
@@ -14,4 +16,5 @@ identity CI uses to deploy, and the registries images and charts get pushed to.
 - `variables.tf`, `outputs.tf`, `versions.tf`
 
 ## Status
-Done .
+
+Done.

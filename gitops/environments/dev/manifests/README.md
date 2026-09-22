@@ -1,9 +1,10 @@
 # GitOps: dev manifests
 
-Anything needed by the running services that isn't a Helm chart value or an ArgoCD Application.
-Currently just the SecretProviderClass resources that map AWS Secrets Manager entries into
-Kubernetes secrets — these aren't part of the upstream charts, and their ARNs differ per
-environment, so they live here rather than in a shared chart.
+![dev manifests diagram (planned)](../../../../docs/diagrams/generated/dev-manifests.png)
+
+Anything needed by the running services that isn't a Helm chart value or an ArgoCD Application -
+planned: SecretProviderClass resources mapping Secrets Manager entries into Kubernetes secrets,
+since their ARNs differ per environment and aren't part of the upstream charts.
 
 ## Expected contents
 

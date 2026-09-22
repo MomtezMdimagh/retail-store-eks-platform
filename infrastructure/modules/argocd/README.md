@@ -1,11 +1,11 @@
 # Module: argocd
 
+![argocd module diagram](../../../docs/diagrams/generated/argocd-module.png)
+
 Installs ArgoCD via Helm and creates the one bootstrap `Application` (the app-of-apps root) that
-lets everything else - the AppProject, per-service Applications, and platform manifests - be
-GitOps-managed from `gitops/` and `platform/` instead of ever needing a manual `kubectl apply`. Also
-runs a small CronJob that refreshes ArgoCD's ECR repository credentials every 6 hours, since ECR
-authorization tokens expire every 12 hours and there is no native IAM-based passwordless path for
-Helm OCI pulls from a private registry.
+lets everything else be GitOps-managed instead of ever needing a manual `kubectl apply`. Also runs
+a CronJob that refreshes ArgoCD's ECR credentials every 6 hours - tokens expire every 12, and there
+is no native IAM-based passwordless path for Helm OCI pulls from a private registry.
 
 **Built in:** PR 8 — `feat/argocd`
 

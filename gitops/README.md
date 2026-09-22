@@ -1,11 +1,11 @@
 # GitOps
 
+![gitops overview diagram](../docs/diagrams/generated/gitops-overview.png)
+
 The desired state ArgoCD reconciles against: one Application per service, plus a `platform`
-Application that syncs everything under `platform/`. The one bootstrap Application that owns every
-other Application is created by `modules/argocd` via Terraform (`kubernetes_manifest`), not applied
-by hand — that's the one deliberate exception to "everything here is GitOps-managed," and it's
-Terraform-managed instead of a manual `kubectl apply` specifically so it's never a step a person can
-forget.
+Application, per environment. The one bootstrap Application that owns every other Application is
+created by `modules/argocd` via Terraform - the one deliberate exception to
+"everything here is GitOps-managed," so it's never a step a person can forget.
 
 ## Structure
 

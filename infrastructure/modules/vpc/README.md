@@ -1,15 +1,16 @@
 # Module: vpc
 
-Networking foundation for the cluster: a 3-availability-zone VPC with public and private subnets,
-NAT gateways for private egress, and the subnet tags EKS and its load balancer controller need for
-service and ingress discovery. A single shared NAT gateway serves all private subnets to keep costs
-down — a deliberate simplification for a single-environment project, not a configurable toggle.
+![VPC module diagram](../../../docs/diagrams/generated/vpc-module.png)
+
+Networking foundation for the cluster: a 3-AZ VPC with public and private subnets, a single shared
+NAT gateway for private egress (a deliberate, fixed-cost simplification, not a configurable
+toggle), and the subnet tags EKS and its load balancer controller need for discovery.
 
 **Built in:** PR 3 — `feat/vpc-module`
 
 ## Status
 
-Not yet implemented.
+Implemented.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements

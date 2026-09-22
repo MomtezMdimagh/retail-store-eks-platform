@@ -1,5 +1,7 @@
 # GitOps: prod applications
 
+![prod applications diagram](../../../../docs/diagrams/generated/prod-applications.png)
+
 One ArgoCD Application per service, plus `platform.yaml` which syncs the shared `platform/`
 directory and this environment's own `../platform/` directory. Auto-sync with prune and
 self-heal enabled — drift between the cluster and this directory corrects itself.

@@ -1,15 +1,19 @@
 # Platform
 
-Cluster-level Kubernetes manifests: node provisioning policy and the observability collector
-configuration. Everything here is managed by ArgoCD, not applied by hand — the only manual
-`kubectl apply` in this project is the one-time app-of-apps bootstrap in `gitops/`.
+![platform overview diagram](../docs/diagrams/generated/platform-overview.png)
+
+Cluster-level Kubernetes manifests shared identically by every environment's ArgoCD instance:
+node provisioning policy, observability collector configuration, and the AppProject. Applied by
+ArgoCD, not by hand — the only manual `kubectl apply` in this project is the one-time app-of-apps
+bootstrap in `gitops/`.
 
 ## Expected contents
 
-- `karpenter/` — node provisioning: EC2NodeClass and NodePools (on-demand, spot)
-- `observability/` — ADOT collector configuration and instrumentation
-- `argocd/` — installation notes and the AppProject definition
+- `karpenter/` — node provisioning: NodePools (on-demand, spot)
+- `observability/` — shared ADOT collector configuration and instrumentation
+- `argocd/` — the AppProject definition
 
 ## Status
 
-Not yet implemented.
+Manifests committed across all three subfolders. Not yet applied - see each subfolder's own
+status.

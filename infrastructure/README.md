@@ -1,14 +1,13 @@
 # Infrastructure
 
-All Terraform for the platform, split into two layers:
+![Layer dependency order](../docs/diagrams/generated/infra-layers.png)
 
-- **`modules/`** — reusable building blocks. All resource logic lives here. A module knows nothing
-  about which environment it's deployed into.
-- **`live/<env>/<NN-layer>/`** — thin per-environment roots. Each one is a module call plus backend
-  configuration and a `.tfvars` file — no resources defined directly. Layers are numbered by
-  dependency order (network before cluster, cluster before workloads) and applied in that order.
+All Terraform for the platform, split into two layers: **`modules/`** (reusable,
+environment-agnostic resource logic) and **`live/<env>/<NN-layer>/`** (thin per-environment
+roots — a module call plus backend config and `.tfvars`, no resources of their own). Layers are
+numbered by dependency order and applied in that order.
 
 ## Status
 
-`modules/` is being built out progressively — see each module's own README for what it owns and
-which PR delivers it. `live/` appears alongside the first module that needs it.
+All seven layers are implemented for both `dev` and `prod` — see each module's own README for
+what it owns and which PR delivered it.
