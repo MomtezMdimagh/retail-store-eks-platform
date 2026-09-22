@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: orders
+  namespace: argocd
+spec:
+  project: retail-store
+  sources:
+    - repoURL: 652197205931.dkr.ecr.us-east-1.amazonaws.com/charts/orders
+      chart: orders
+      targetRevision: "0.1.0" # placeholder until PR 9's CI pushes a real chart version
+      helm:
+        valueFiles:
+          - $values/gitops/environments/prod/values/values-orders.yaml
+    - repoURL: https://github.com/MomtezMdimagh/retail-store-eks-platform.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

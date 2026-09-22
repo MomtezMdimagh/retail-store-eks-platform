@@ -1,0 +1,34 @@
+# Image tag is promoted manually - a reviewed PR copies a proven dev tag here. No CI writes to this file.
+image:
+  tag: "0.1.0"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# CPU-only target, deliberately - ui is JVM-based, and a memory target on a JVM service is a real
+# trap: heap doesn't shrink back down after a load spike, so the HPA scales up and never scales
+# back down again.
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: "50%" # a percentage, not a fixed count, so it tracks min/maxReplicas automatically
+
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: ScheduleAnyway # soft - a hard constraint risks Pending pods in a dev/demo env
+    matchLabelKeys:
+      - pod-template-hash # avoids a rolling-update deadlock between old and new ReplicaSet pods
+
+# No capacity-type nodeSelector - ui can tolerate spot interruption, so Karpenter is free to use
+# either NodePool from PR 6.
