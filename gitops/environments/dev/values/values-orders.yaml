@@ -19,7 +19,7 @@ fullnameOverride: orders
 app:
   persistence:
     provider: postgres
-    endpoint: "<FILL IN AFTER 50-data-plane APPLIES: terraform output orders_endpoint>"
+    endpoint: "retail-store-eks-dev-orders-postgres.ccj0scyk4vhv.us-east-1.rds.amazonaws.com:5432"
     database: "orders"
     secret:
       create: false

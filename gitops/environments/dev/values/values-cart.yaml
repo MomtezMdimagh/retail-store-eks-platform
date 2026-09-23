@@ -18,7 +18,7 @@ app:
   persistence:
     provider: dynamodb
     dynamodb:
-      tableName: "<FILL IN AFTER 50-data-plane APPLIES: terraform output cart_table_name>"
+      tableName: "retail-store-eks-dev-cart-items"
       createTable: false
 
 resources:

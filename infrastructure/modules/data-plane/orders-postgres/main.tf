@@ -35,6 +35,7 @@ resource "aws_db_instance" "orders" {
   storage_encrypted           = true
   db_subnet_group_name        = aws_db_subnet_group.orders.name
   vpc_security_group_ids      = [aws_security_group.orders.id]
+  username                    = "orders"
   manage_master_user_password = true
   publicly_accessible         = false
   skip_final_snapshot         = false
