@@ -113,6 +113,44 @@ resource "aws_iam_role_policy_attachment" "eks_node" {
 
 # the node group itself
 
+# A launch template purely to raise the IMDS hop limit to 2. AWS's default of 1 only allows
+# processes running directly on the host to reach instance metadata - pod network namespaces are
+# one hop further away, so with no launch template at all (the default for a managed node group),
+# any pod trying to query IMDS (e.g. the LB Controller auto-discovering its VPC ID) gets
+# "context deadline exceeded". Karpenter's EC2NodeClass already sets this correctly for the nodes
+# it provisions - this was the one gap where the baseline group, created before Karpenter exists,
+# was missed. No custom AMI here: leaving image_id unset means EKS still supplies the AMI that
+# matches the node group's own `ami_type`, same as if there were no launch template at all.
+resource "aws_launch_template" "baseline" {
+  name_prefix = "${var.cluster_name}-baseline-"
+
+  block_device_mappings {
+    device_name = "/dev/xvda"
+    ebs {
+      volume_size = var.node_disk_size
+      volume_type = "gp3"
+      encrypted   = true
+    }
+  }
+
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 2
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+    tags          = merge(var.tags, { Name = "${var.cluster_name}-baseline", Environment = var.environment_name })
+  }
+
+  tags = merge(var.tags, { Environment = var.environment_name })
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 resource "aws_eks_node_group" "baseline" {
   cluster_name    = aws_eks_cluster.main.name
   node_group_name = "${var.cluster_name}-baseline"
@@ -122,7 +160,11 @@ resource "aws_eks_node_group" "baseline" {
   instance_types = var.node_instance_types
   capacity_type  = var.node_capacity_type
   ami_type       = "AL2023_x86_64_STANDARD"
-  disk_size      = var.node_disk_size
+
+  launch_template {
+    id      = aws_launch_template.baseline.id
+    version = aws_launch_template.baseline.latest_version
+  }
 
   scaling_config {
     desired_size = var.node_desired_size
