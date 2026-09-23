@@ -18,7 +18,7 @@ app:
   persistence:
     provider: redis
     redis:
-      endpoint: "<FILL IN AFTER 50-data-plane APPLIES: terraform output checkout_endpoint>:6379"
+      endpoint: "retail-store-eks-dev-checkout-redis.gp1sug.ng.0001.use1.cache.amazonaws.com:6379"
   endpoints:
     orders: "http://orders:80"
 

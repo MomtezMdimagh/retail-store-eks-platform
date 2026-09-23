@@ -16,7 +16,7 @@ fullnameOverride: catalog
 app:
   persistence:
     provider: mysql
-    endpoint: "<FILL IN AFTER 50-data-plane APPLIES: terraform output catalog_endpoint>"
+    endpoint: "retail-store-eks-dev-catalog-mysql.ccj0scyk4vhv.us-east-1.rds.amazonaws.com:3306"
     database: "catalog"
     secret:
       create: false
