@@ -9,6 +9,9 @@ spec:
   sourceRepos:
     - https://github.com/MomtezMdimagh/retail-store-sample-app.git
     - https://github.com/MomtezMdimagh/retail-store-eks-platform.git
+    # Helm charts are pulled as OCI artifacts from our own ECR (charts/<service>), not from Git -
+    # each service Application's chart source needs to be allowed here or ArgoCD refuses it.
+    - 652197205931.dkr.ecr.us-east-1.amazonaws.com/charts/*
 
   destinations:
     - namespace: default
