@@ -27,7 +27,7 @@ kubeconfig*
 .env
 .env.*
 
-# Private working notes — must never be published (holds the course->file mapping)
+# Private working notes — must never be published
 NOTES.md
 
 # Tool caches
