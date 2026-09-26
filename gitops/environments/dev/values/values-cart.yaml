@@ -3,7 +3,7 @@
 # only ever lands in ours.
 image:
   repository: 652197205931.dkr.ecr.us-east-1.amazonaws.com/retail-store/cart
-  tag: "0.1.0"
+  tag: "sha-43e782c"
 
 # The chart's own internal name is "carts" (see its _helpers.tpl), independent of our "cart"
 # Application/release name - without this override the real k8s Service name would be
