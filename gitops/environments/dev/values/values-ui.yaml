@@ -36,11 +36,15 @@ autoscaling:
 podDisruptionBudget:
   enabled: true
   minAvailable: "50%" # a percentage, not a fixed count, so it tracks min/maxReplicas automatically
+  maxUnavailable: null # the chart defaults this to 1; PDBs reject minAvailable + maxUnavailable together
 
 topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: topology.kubernetes.io/zone
     whenUnsatisfiable: ScheduleAnyway # soft - a hard constraint risks Pending pods in a dev/demo env
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/instance: ui
     matchLabelKeys:
       - pod-template-hash # avoids a rolling-update deadlock between old and new ReplicaSet pods
 
