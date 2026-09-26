@@ -6,7 +6,7 @@ metadata:
 spec:
   project: retail-store
   sources:
-    - repoURL: 652197205931.dkr.ecr.us-east-1.amazonaws.com/charts/catalog
+    - repoURL: 652197205931.dkr.ecr.us-east-1.amazonaws.com/charts
       chart: catalog
       targetRevision: "0.1.0" # placeholder until PR 9's CI pushes a real chart version
       helm:

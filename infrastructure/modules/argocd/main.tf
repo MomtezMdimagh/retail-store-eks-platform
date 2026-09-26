@@ -181,7 +181,7 @@ resource "kubernetes_cron_job_v1" "ecr_updater" {
                   --from-literal=username=AWS \
                   --from-literal=password="$(cat /token/password)" \
                   --dry-run=client -o yaml | kubectl label -f - --local -o yaml \
-                  argocd.argoproj.io/secret-type=repository | kubectl apply -f -
+                  argocd.argoproj.io/secret-type=repo-creds | kubectl apply -f -
               EOT
               ]
 

@@ -44,17 +44,19 @@ aws ecr get-login-password --region us-east-1 \
 cd /path/to/retail-store-sample-app
 for svc in cart catalog checkout orders ui; do
   helm package "src/$svc/chart" --version 0.1.0 --app-version 0.1.0 -d /tmp/charts
-  helm push "/tmp/charts/$svc-0.1.0.tgz" "oci://652197205931.dkr.ecr.us-east-1.amazonaws.com/charts/$svc"
+  helm push "/tmp/charts/$svc-0.1.0.tgz" "oci://652197205931.dkr.ecr.us-east-1.amazonaws.com/charts"
 done
 ```
 
 **Verify before moving on**: `aws ecr describe-images --repository-name charts/cart` (and the
-other 4) each show one image. If `helm push` instead tries a path like
-`.../charts/cart/cart`, ArgoCD's `repoURL`/`chart` split in
-`gitops/environments/dev/applications/<service>.yaml` and this push target disagree - fix
-whichever one doesn't match what the error message actually resolved to before continuing; this
-is the one step in this runbook with any real ambiguity, confirmed empirically here rather than
-guessed.
+other 4) each show one image tagged `0.1.0`.
+
+Two details confirmed the hard way on the first real run: `helm push` takes the registry path
+*without* the chart name (it appends the chart's own `Chart.yaml` name, which is why step 1's
+rename matters), and ArgoCD does the same when pulling - each Application's `repoURL` is
+`<registry>/charts` and its `chart:` field supplies the final `<service>` segment. Putting
+`charts/<service>` in `repoURL` makes ArgoCD look for `charts/<service>/<service>`, which
+doesn't exist.
 
 ## 3. Apply the 7 layers, in order
 
