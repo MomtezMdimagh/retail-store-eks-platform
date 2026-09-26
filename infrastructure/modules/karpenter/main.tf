@@ -51,7 +51,7 @@ data "aws_iam_policy_document" "karpenter_controller" {
       "ec2:DescribeInstances", "ec2:DescribeImages", "ec2:DescribeInstanceTypes",
       "ec2:DescribeInstanceTypeOfferings", "ec2:DescribeAvailabilityZones",
       "ec2:DescribeLaunchTemplates", "ec2:DescribeSubnets", "ec2:DescribeSecurityGroups",
-      "ec2:DescribeSpotPriceHistory",
+      "ec2:DescribeSpotPriceHistory", "ec2:DescribeInstanceStatus",
     ]
     resources = ["*"]
     condition {
@@ -90,11 +90,72 @@ data "aws_iam_policy_document" "karpenter_controller" {
     }
   }
 
+  # Instance-profile permissions follow Karpenter's own published policy. The split matters: a
+  # profile that doesn't exist yet can't carry a tag, so creation has to be scoped by the *request*
+  # tags, and reading has to be unconditional - gating all of these on an existing resource tag
+  # (as this originally did) makes Karpenter unable to ever create its first profile, leaving the
+  # EC2NodeClass stuck "awaiting reconciliation" and every NodePool not ready.
+  statement {
+    sid       = "AllowScopedInstanceProfileCreationActions"
+    actions   = ["iam:CreateInstanceProfile"]
+    resources = ["*"]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:RequestTag/kubernetes.io/cluster/${var.cluster_name}"
+      values   = ["owned"]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:RequestTag/topology.kubernetes.io/region"
+      values   = [data.aws_region.current.region]
+    }
+    condition {
+      test     = "StringLike"
+      variable = "aws:RequestTag/karpenter.k8s.aws/ec2nodeclass"
+      values   = ["*"]
+    }
+  }
+
+  statement {
+    sid       = "AllowScopedInstanceProfileTagActions"
+    actions   = ["iam:TagInstanceProfile"]
+    resources = ["*"]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:ResourceTag/kubernetes.io/cluster/${var.cluster_name}"
+      values   = ["owned"]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:ResourceTag/topology.kubernetes.io/region"
+      values   = [data.aws_region.current.region]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:RequestTag/kubernetes.io/cluster/${var.cluster_name}"
+      values   = ["owned"]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:RequestTag/topology.kubernetes.io/region"
+      values   = [data.aws_region.current.region]
+    }
+    condition {
+      test     = "StringLike"
+      variable = "aws:ResourceTag/karpenter.k8s.aws/ec2nodeclass"
+      values   = ["*"]
+    }
+    condition {
+      test     = "StringLike"
+      variable = "aws:RequestTag/karpenter.k8s.aws/ec2nodeclass"
+      values   = ["*"]
+    }
+  }
+
   statement {
     sid = "AllowScopedInstanceProfileActions"
     actions = [
-      "iam:CreateInstanceProfile", "iam:TagInstanceProfile", "iam:AddRoleToInstanceProfile",
-      "iam:RemoveRoleFromInstanceProfile", "iam:DeleteInstanceProfile", "iam:GetInstanceProfile",
+      "iam:AddRoleToInstanceProfile", "iam:RemoveRoleFromInstanceProfile", "iam:DeleteInstanceProfile",
     ]
     resources = ["*"]
     condition {
@@ -102,6 +163,22 @@ data "aws_iam_policy_document" "karpenter_controller" {
       variable = "aws:ResourceTag/kubernetes.io/cluster/${var.cluster_name}"
       values   = ["owned"]
     }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:ResourceTag/topology.kubernetes.io/region"
+      values   = [data.aws_region.current.region]
+    }
+    condition {
+      test     = "StringLike"
+      variable = "aws:ResourceTag/karpenter.k8s.aws/ec2nodeclass"
+      values   = ["*"]
+    }
+  }
+
+  statement {
+    sid       = "AllowInstanceProfileReadActions"
+    actions   = ["iam:GetInstanceProfile"]
+    resources = ["*"]
   }
 
   statement {
