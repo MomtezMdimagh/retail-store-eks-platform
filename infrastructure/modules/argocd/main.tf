@@ -61,6 +61,18 @@ data "aws_iam_policy_document" "ecr_updater" {
     actions   = ["ecr:GetAuthorizationToken"] # this action has no resource-level permissions
     resources = ["*"]
   }
+
+  # The token this role mints is what ArgoCD then pulls charts with - so this role, not ArgoCD
+  # itself, is the identity ECR authorizes. Token alone is not enough: without these, every pull
+  # is a 403 even though authentication succeeded. Scoped to the chart repos only, not images.
+  statement {
+    actions = [
+      "ecr:BatchGetImage",
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:BatchCheckLayerAvailability",
+    ]
+    resources = ["arn:aws:ecr:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:repository/charts/*"]
+  }
 }
 
 resource "aws_iam_role" "ecr_updater" {
@@ -172,7 +184,9 @@ resource "kubernetes_cron_job_v1" "ecr_updater" {
             container {
               name  = "update-secret"
               image = "bitnami/kubectl:latest"
-              command = ["sh", "-c", <<-EOT
+              # replace() strips carriage returns: this file is edited on Windows, where a CRLF inside the
+              # heredoc turns every "\" line continuation into "\<CR>" and the script silently breaks.
+              command = ["sh", "-c", replace(<<-EOT
                 kubectl create secret generic argocd-ecr-creds \
                   --namespace ${local.argocd_namespace} \
                   --from-literal=type=helm \
@@ -183,7 +197,7 @@ resource "kubernetes_cron_job_v1" "ecr_updater" {
                   --dry-run=client -o yaml | kubectl label -f - --local -o yaml \
                   argocd.argoproj.io/secret-type=repo-creds | kubectl apply -f -
               EOT
-              ]
+              , "\r", "")]
 
               volume_mount {
                 name       = "token"

@@ -13,3 +13,5 @@ data "aws_iam_policy_document" "pod_identity_assume" {
 }
 
 data "aws_region" "current" {}
+
+data "aws_caller_identity" "current" {}
