@@ -1,0 +1,4 @@
+# Pin line endings to LF everywhere. Windows autocrlf was silently putting CRs inside Terraform
+# heredocs (breaking a shell script at runtime) and churning pre-commit on every commit.
+* text=auto eol=lf
+*.png binary
