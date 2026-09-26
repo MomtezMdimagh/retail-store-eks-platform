@@ -61,6 +61,18 @@ data "aws_iam_policy_document" "ecr_updater" {
     actions   = ["ecr:GetAuthorizationToken"] # this action has no resource-level permissions
     resources = ["*"]
   }
+
+  # The token this role mints is what ArgoCD then pulls charts with - so this role, not ArgoCD
+  # itself, is the identity ECR authorizes. Token alone is not enough: without these, every pull
+  # is a 403 even though authentication succeeded. Scoped to the chart repos only, not images.
+  statement {
+    actions = [
+      "ecr:BatchGetImage",
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:BatchCheckLayerAvailability",
+    ]
+    resources = ["arn:aws:ecr:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:repository/charts/*"]
+  }
 }
 
 resource "aws_iam_role" "ecr_updater" {
