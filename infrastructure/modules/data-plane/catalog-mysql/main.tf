@@ -36,6 +36,7 @@ resource "aws_db_instance" "catalog" {
   db_subnet_group_name        = aws_db_subnet_group.catalog.name
   vpc_security_group_ids      = [aws_security_group.catalog.id]
   username                    = "catalog"
+  db_name                     = "catalog" # the app connects to this database and expects it to exist
   manage_master_user_password = true
   publicly_accessible         = false
   skip_final_snapshot         = false
