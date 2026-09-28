@@ -5,6 +5,9 @@ metadata:
   namespace: observability
 spec:
   mode: daemonset
+  # A per-node log agent has to run on every node, including ones already at their pod-IP
+  # limit - node-critical priority lets it displace an app pod, which reschedules elsewhere.
+  priorityClassName: system-node-critical
   serviceAccount: adot-logs-collector
   config:
     receivers:
