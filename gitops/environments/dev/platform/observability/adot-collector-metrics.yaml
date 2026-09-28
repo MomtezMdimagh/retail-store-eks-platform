@@ -46,7 +46,7 @@ spec:
       prometheusremotewrite: # the current exporter - not the deprecated awsprometheusremotewrite
         # Must match `terraform output amp_remote_write_endpoint` from
         # infrastructure/live/dev/70-observability - filled in once that layer is applied.
-        endpoint: "<amp_remote_write_endpoint>"
+        endpoint: "https://aps-workspaces.us-east-1.amazonaws.com/workspaces/ws-a26954ae-1fe4-41e0-a983-541a407de6e9/api/v1/remote_write"
         auth:
           authenticator: sigv4auth
     extensions:
