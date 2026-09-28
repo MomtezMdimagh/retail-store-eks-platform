@@ -11,6 +11,8 @@ hardcode a log group name and an AMP endpoint), at `gitops/environments/<env>/pl
 ## Expected contents
 
 - `namespace.yaml`
+- `collector-serviceaccounts.yaml` — the three collectors' service accounts (the Pod Identity
+  targets) and the metrics collector's read RBAC for Kubernetes service discovery
 - `adot-collector-traces.yaml`
 - `adot-instrumentation.yaml`
 
