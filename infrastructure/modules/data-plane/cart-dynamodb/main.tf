@@ -8,6 +8,20 @@ resource "aws_dynamodb_table" "cart" {
     type = "S"
   }
 
+  attribute {
+    name = "customerId"
+    type = "S"
+  }
+
+  # The cart service looks a customer's items up through this index, by name - it's part of the
+  # table design the upstream application assumes, not an optimisation, so without it every request
+  # fails with AccessDenied/ResourceNotFound and the pods crash-loop.
+  global_secondary_index {
+    name            = "idx_global_customerId"
+    hash_key        = "customerId"
+    projection_type = "ALL"
+  }
+
   server_side_encryption {
     enabled = true
   }
@@ -25,7 +39,7 @@ data "aws_iam_policy_document" "cart" {
       "dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:UpdateItem",
       "dynamodb:DeleteItem", "dynamodb:Query",
     ]
-    resources = [aws_dynamodb_table.cart.arn]
+    resources = [aws_dynamodb_table.cart.arn, "${aws_dynamodb_table.cart.arn}/index/*"] # Query on an index is authorised against the index ARN, not the table's
   }
 }
 
