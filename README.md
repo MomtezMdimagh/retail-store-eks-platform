@@ -60,26 +60,6 @@ cluster, and Argo CD instance.
 - **One NAT gateway, on purpose.** A fixed, known cost instead of per-AZ redundancy this project doesn't
   need.
 
-## Lessons learned: what `terraform plan` couldn't catch
-
-Everything validated cleanly before the first real deploy. Running it for real surfaced about 20 bugs
-that only show up at apply time or at runtime. Each one is fixed in its own pull request:
-
-| Symptom | Root cause | Fix |
-|---|---|---|
-| Load Balancer Controller crash-looping | Baseline node group had no launch template, so the IMDS hop limit of 1 blocked pods from instance metadata | [#19](https://github.com/MomtezMdimagh/retail-store-eks-platform/pull/19) |
-| RDS creation rejected | `manage_master_user_password` still needs an explicit master `username` | [#19](https://github.com/MomtezMdimagh/retail-store-eks-platform/pull/19) |
-| Argo CD couldn't pull any chart | Credential secret labeled for one exact URL instead of as a template, plus a doubled chart path | [#22](https://github.com/MomtezMdimagh/retail-store-eks-platform/pull/22) |
-| ECR token refresher failing at runtime | A Windows line ending inside a Terraform heredoc broke every `\` continuation in the shell script | [#23](https://github.com/MomtezMdimagh/retail-store-eks-platform/pull/23) |
-| Deployments rejected by Kubernetes | PDB had both `minAvailable` and `maxUnavailable`; `matchLabelKeys` without a `labelSelector` | [#24](https://github.com/MomtezMdimagh/retail-store-eks-platform/pull/24) |
-| CI couldn't authenticate to AWS | GitHub's newer immutable OIDC subject uses numeric IDs, so the name-based trust never matched | [#25](https://github.com/MomtezMdimagh/retail-store-eks-platform/pull/25) |
-| Pods Pending, Karpenter never launched a node | IAM gated instance-profile *creation* on a tag the profile can't have yet | [#27](https://github.com/MomtezMdimagh/retail-store-eks-platform/pull/27) |
-| Cart crash-looping | App queries a DynamoDB index the table didn't define | [#28](https://github.com/MomtezMdimagh/retail-store-eks-platform/pull/28) |
-| Database secrets never mounted | Secrets Store CSI provider defaults to IRSA; needed `usePodIdentity` | [#28](https://github.com/MomtezMdimagh/retail-store-eks-platform/pull/28) |
-| Catalog and orders crash-looping | RDS instances created without the databases the apps expect | [#30](https://github.com/MomtezMdimagh/retail-store-eks-platform/pull/30) |
-| Catalog "Access denied" with correct credentials | App's config loader expanded a `$` inside the generated password; fixed in the app code | [app#3](https://github.com/MomtezMdimagh/retail-store-sample-app/pull/3) |
-| Observability collectors had zero pods | Service accounts the collectors name were never created | [#32](https://github.com/MomtezMdimagh/retail-store-eks-platform/pull/32) |
-
 ## Getting started
 
 The full apply sequence, from an empty account to a working checkout, is in
