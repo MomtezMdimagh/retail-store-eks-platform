@@ -75,7 +75,7 @@ data "aws_iam_policy_document" "orders" {
   }
 
   statement {
-    actions   = ["sqs:SendMessage", "sqs:ReceiveMessage", "sqs:DeleteMessage", "sqs:GetQueueAttributes"]
+    actions   = ["sqs:SendMessage", "sqs:ReceiveMessage", "sqs:DeleteMessage", "sqs:GetQueueAttributes", "sqs:GetQueueUrl"]
     resources = [aws_sqs_queue.orders.arn]
   }
 }

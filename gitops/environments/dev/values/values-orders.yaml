@@ -11,12 +11,16 @@ fullnameOverride: orders
 # only exist once infrastructure/live/dev/50-data-plane is applied - fill in from
 # `terraform output orders_endpoint` and the SecretProviderClass in
 # gitops/environments/dev/manifests/secretproviderclass-orders.yaml, per docs/runbooks/deploy.md.
-# Messaging deliberately stays "in-memory" this round - the vendored chart has no template
-# support for an "sqs" provider yet, even though the real SQS queue exists
-# (infrastructure/modules/data-plane/orders-postgres) and the app's Java code does support it.
-# A documented follow-up, not a blocker: orders still persists real rows to real Postgres either
-# way.
+# Order events go to the real SQS queue from infrastructure/modules/data-plane/orders-postgres.
+# Needs a chart built from the app fork with the SQS values (MomtezMdimagh/retail-store-sample-app#4,
+# upstream aws-containers/retail-store-sample-app#1147). Credentials come from the orders Pod
+# Identity role; region from IMDS (EC2NodeClass hop limit is 2).
 app:
+  messaging:
+    provider: sqs
+    sqs:
+      topic: "retail-store-eks-dev-orders"
+
   persistence:
     provider: postgres
     endpoint: "retail-store-eks-dev-orders-postgres.ccj0scyk4vhv.us-east-1.rds.amazonaws.com:5432"
