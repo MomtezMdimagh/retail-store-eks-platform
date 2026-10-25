@@ -82,8 +82,10 @@ The full apply sequence, from an empty account to a working checkout, is in
 
 ## Known limitations and next steps
 
-- **Orders events to SQS:** the queue exists, but the upstream chart has no SQS option, so orders uses
-  in-memory messaging for now.
+- **Orders events to SQS:** codified, not yet applied. `dev` values switch orders to the SQS provider and
+  the orders role can resolve the queue URL; it needs the chart change from
+  [aws-containers/retail-store-sample-app#1147](https://github.com/aws-containers/retail-store-sample-app/pull/1147)
+  (carried in the fork until upstream merges it).
 - **Pod density:** `t3.medium` nodes cap at 17 pods; VPC CNI prefix delegation would lift that.
 - **Public entry point:** the storefront is reached by port-forward today; next is an ALB Ingress with
   an ACM certificate and ExternalDNS-managed records.
